@@ -12,10 +12,26 @@ var coffee2 = new Image();
 coffee2.src = 'assets/img/coffee_2.png';
 var coffee3 = new Image();
 coffee3.src = 'assets/img/coffee_3.png';
+
+// FIXME: bad and unsustainable on the long run
 var camel1 = new Image();
-camel1.src = 'assets/img/tr2_0a.gif';
+camel1.src = '../../common/img/camel_f_d_l.png';
 var camel2 = new Image();
-camel2.src = 'assets/img/tr2_0a_r.gif';
+camel2.src = '../../common/img/camel_m_d_l.png';
+var camel3 = new Image();
+camel3.src = '../../common/img/camel_f_l_l.png';
+var camel4 = new Image();
+camel4.src = '../../common/img/camel_m_l_l.png';
+
+var camel5 = new Image();
+camel5.src = '../../common/img/camel_f_d_r.png';
+var camel6 = new Image();
+camel6.src = '../../common/img/camel_m_d_r.png';
+var camel7 = new Image();
+camel7.src = '../../common/img/camel_f_l_r.png';
+var camel8 = new Image();
+camel8.src = '../../common/img/camel_m_l_r.png';
+
 var cofeeMachine = new Image();
 cofeeMachine.src = 'assets/img/coffee_machine.png';
 var camelLeaving = false;
@@ -25,6 +41,7 @@ var brewingAnimDuration = 100;
 var brewingAnimState = 0;
 var camel2x = 0;
 var camel2y = 220;
+var buyerCamel = getRandomInt(4);
 
 // Main game loop
 function gameLoop() {
@@ -47,8 +64,8 @@ function drawGame() {
     ctx.drawImage(coffee3, 280, 0, 100, 100);
 
     // Draw camels
-    if (!camelMakingCoffee) ctx.drawImage(camel1, 180, 220, 180, 180);
-    if (!camelLeaving) ctx.drawImage(camel2, camel2x, 220, 180, 180);
+    if (!camelMakingCoffee) ctx.drawImage(camel4, 180, 220, 160, 160);
+    if (!camelLeaving) ctx.drawImage(getCamelForId(buyerCamel, 'right'), camel2x, 220, 160, 160);
 
     // Draw order
     if (!camelLeaving && !camelComing) {
@@ -125,7 +142,7 @@ function getRandomInt(max) {
 function animCamelLeave() {
     console.log('leaving');
     camelLeaving = true;
-    ctx.drawImage(camel1, camel2x, camel2y, 180, 180);
+    ctx.drawImage(getCamelForId(buyerCamel, 'left'), camel2x, camel2y, 160, 160);
     camel2x -= 3;
 
     console.log(camel2x);
@@ -133,15 +150,17 @@ function animCamelLeave() {
         requestAnimationFrame(animCamelLeave);
     } else {
         camelLeaving = false;
+        // New coffee
+        camelPickedCoffee = getRandomInt(3);
+        // New camel
+        buyerCamel = getRandomInt(4);
         animCamelComing();
     }
 }
 function animCamelComing() {
-    // New coffee
-    camelPickedCoffee = getRandomInt(3);
 
     camelComing = true;
-    ctx.drawImage(camel2, camel2x, camel2y, 180, 180);
+    ctx.drawImage(getCamelForId(buyerCamel, 'right'), camel2x, camel2y, 160, 160);
     camel2x += 3;
 
     console.log(camel2x);
@@ -154,7 +173,7 @@ function animCamelComing() {
 }
 function animMakeCoffee() {
     camelMakingCoffee = true;
-    ctx.drawImage(camel2, 180, 220, 180, 180);
+    ctx.drawImage(camel8, 180, 220, 160, 160);
 
     // Draw Machine FIXME ugly workaround for layer issues
     ctx.drawImage(cofeeMachine, 320, 200, 80, 80);
@@ -166,6 +185,33 @@ function animMakeCoffee() {
     } else {
         camelMakingCoffee = false;
         animCamelLeave();
+    }
+}
+
+function getCamelForId(id, facing) {
+    // horrible tbh, but works
+    if (facing === 'left') {
+        switch (id) {
+            case 1:
+                return camel1;
+            case 2:
+                return camel2;
+            case 3:
+                return camel3;
+            case 4:
+                return camel4;
+        }
+    } else {
+        switch (id) {
+            case 1:
+                return camel5;
+            case 2:
+                return camel6;
+            case 3:
+                return camel7;
+            case 4:
+                return camel8;
+        }
     }
 }
 
